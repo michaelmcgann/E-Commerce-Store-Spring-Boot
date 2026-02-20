@@ -1,16 +1,16 @@
 package com.sbeccommerce.ecommercestore.service;
 
+import com.sbeccommerce.ecommercestore.DTO.category.CategoryDTO;
+import com.sbeccommerce.ecommercestore.DTO.category.CategoryResponse;
 import com.sbeccommerce.ecommercestore.model.Category;
-
-import java.util.List;
 
 public interface CategoryService {
 
-    List<Category> getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize);
 
-    void createCategory(Category category);
+    CategoryDTO createCategory(CategoryDTO category);
 
-    String deleteCategory(Long id);
+    CategoryDTO deleteCategory(Long id);
 
-    Category updateCategory(Category category, Long id);
+    CategoryDTO updateCategory(CategoryDTO category, Long id);
 }
