@@ -10,10 +10,11 @@ import com.sbeccommerce.ecommercestore.utils.mapping.CategoryMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -27,9 +28,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
+    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize);
+        Set<String> allowed = Set.of("categoryName", "categoryId");
+        if (!allowed.contains(sortBy)) throw new APIException("sortBy name: '" + sortBy + "' not valid.");
+
+        Sort sortByAndOrder = "asc".equalsIgnoreCase(sortOrder) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
         Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
 
         if (categoryPage.isEmpty()) throw new APIException("There are no categories added yet.");
