@@ -2,6 +2,7 @@
 ## E-commerce store built using Java 21 & Spring Boot
 
 Built as a RESTful back-end system with modularity and separation of concerns in mind.
+Based on and structured around: https://www.udemy.com/course/spring-boot-using-intellij-build-a-real-world-project/
 
 ### Technologies used:
 - Java 21
