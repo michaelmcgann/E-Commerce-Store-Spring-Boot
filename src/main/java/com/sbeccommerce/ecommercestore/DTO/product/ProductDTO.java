@@ -3,6 +3,7 @@ package com.sbeccommerce.ecommercestore.DTO.product;
 public class ProductDTO {
 
     private Long productId;
+    private Long categoryId;
     private String productName;
     private String description;
 //    private String image;
@@ -14,8 +15,9 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long productId, String productName, String description, /*String image,*/ Integer quantity, Double price,/* Double discount,*/ Double specialPrice) {
+    public ProductDTO(Long productId, Long categoryId, String productName, String description, /*String image,*/ Integer quantity, Double price,/* Double discount,*/ Double specialPrice) {
         this.productId = productId;
+        this.categoryId = categoryId;
         this.productName = productName;
         this.description = description;
 //        this.image = image;
@@ -31,6 +33,14 @@ public class ProductDTO {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getProductName() {
