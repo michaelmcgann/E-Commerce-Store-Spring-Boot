@@ -3,6 +3,7 @@ package com.sbeccommerce.ecommercestore.controller;
 import com.sbeccommerce.ecommercestore.DTO.product.ProductDTO;
 import com.sbeccommerce.ecommercestore.DTO.product.ProductResponse;
 import com.sbeccommerce.ecommercestore.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class ProductController {
     }
 
     @PostMapping("/admin/categories/{categoryId}/products")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO,
+    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO,
                                                  @PathVariable Long categoryId) {
 
         ProductDTO savedProduct = productService.addProduct(categoryId, productDTO);
@@ -47,7 +48,7 @@ public class ProductController {
 
     @PutMapping("/admin/products/{productId}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId,
-                                                    @RequestBody ProductDTO productDTO) {
+                                                    @Valid @RequestBody ProductDTO productDTO) {
 
         ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
         return ResponseEntity.ok(updatedProductDTO);

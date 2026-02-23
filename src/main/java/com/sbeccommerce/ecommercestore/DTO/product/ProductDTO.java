@@ -1,15 +1,35 @@
 package com.sbeccommerce.ecommercestore.DTO.product;
 
+import jakarta.validation.constraints.*;
+
 public class ProductDTO {
 
     private Long productId;
+
     private Long categoryId;
+
+    @NotBlank(message = "Product name needs to be over 3 characters long")
+    @Size(min = 3, message = "Product name needs to be over 3 characters long")
     private String productName;
+
+    @NotBlank(message = "Product description needs to be over 10 characters long")
+    @Size(min = 10, message = "Product description needs to be over 10 characters long")
     private String description;
+
 //    private String image;
+
+    @NotNull(message = "Quantity should be zero or more.")
+    @PositiveOrZero(message = "Quantity should be zero or more.")
     private Integer quantity;
+
+    @NotNull(message = "Price should be zero or above.")
+    @PositiveOrZero(message = "Price should be zero or above.")
     private Double price;
+
 //    private Double discount;
+
+    @NotNull(message = "Price should be zero or above.")
+    @PositiveOrZero(message = "Price should be zero or above.")
     private Double specialPrice;
 
     public ProductDTO() {
