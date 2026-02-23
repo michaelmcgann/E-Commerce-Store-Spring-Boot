@@ -6,6 +6,7 @@ import com.sbeccommerce.ecommercestore.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -20,9 +21,16 @@ public interface ProductMapper {
 
     List<ProductDTO> toProductsDTOs(List<Product> products);
 
-    default ProductResponse toResponse(List<Product> products) {
+    default ProductResponse toResponse(Page<Product> productPage) {
         ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(toProductsDTOs(products));
+
+        productResponse.setContent(toProductsDTOs(productPage.getContent()));
+        productResponse.setPageNumber(productPage.getNumber());
+        productResponse.setPageSize(productPage.getSize());
+        productResponse.setTotalElements(productPage.getTotalElements());
+        productResponse.setTotalPages(productPage.getTotalPages());
+        productResponse.setLastPage(productPage.isLast());
+
         return productResponse;
     }
 

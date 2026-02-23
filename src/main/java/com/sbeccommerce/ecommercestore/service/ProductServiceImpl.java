@@ -9,9 +9,14 @@ import com.sbeccommerce.ecommercestore.model.Product;
 import com.sbeccommerce.ecommercestore.repository.CategoryRepository;
 import com.sbeccommerce.ecommercestore.repository.ProductRepository;
 import com.sbeccommerce.ecommercestore.utils.mapping.ProductMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -40,30 +45,52 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        if (products.isEmpty()) throw new APIException("There are no products added yet.");
+    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
-        return productMapper.toResponse(products);
+        Set<String> allowed = Set.of("productName", "productId");
+        if (!allowed.contains(sortBy)) throw new APIException("sortBy name: '" + sortBy + "' not valid.");
+
+        Sort sortByAndOrder = "asc".equalsIgnoreCase(sortOrder) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Product> productPage = productRepository.findAll(pageDetails);
+
+        if (productPage.isEmpty()) throw new APIException("There are no products added yet.");
+
+        return productMapper.toResponse(productPage);
     }
 
     @Override
-    public ProductResponse searchByCategory(Long categoryId) {
+    public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+
+        Set<String> allowed = Set.of("productName", "productId");
+        if (!allowed.contains(sortBy)) throw new APIException("sortBy name: '" + sortBy + "' not valid.");
+
+        Sort sortByAndOrder = "asc".equalsIgnoreCase(sortOrder) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
-        List<Product> foundProducts = productRepository.getAllByCategoryOrderByPriceAsc(category);
-        if (foundProducts.isEmpty()) throw new APIException("There are no products in this category yet.");
 
-        return productMapper.toResponse(foundProducts);
+        Page<Product> productPage = productRepository.getAllByCategoryOrderByPriceAsc(category, pageDetails);
+        if (productPage.isEmpty()) throw new APIException("There are no products in this category yet.");
+
+        return productMapper.toResponse(productPage);
     }
 
     @Override
-    public ProductResponse searchProductByKeyword(String keyword) {
-        List<Product> foundProducts = productRepository.findProductsByProductNameContainsIgnoreCase(keyword);
-        if (foundProducts.isEmpty()) throw new APIException("No products found containing keyword: " + keyword);
-        return productMapper.toResponse(foundProducts);
+    public ProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+
+        Set<String> allowed = Set.of("productName", "productId");
+        if (!allowed.contains(sortBy)) throw new APIException("sortBy name: '" + sortBy + "' not valid.");
+
+        Sort sortByAndOrder = "asc".equalsIgnoreCase(sortOrder) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
+        Page<Product> productPage = productRepository.findProductsByProductNameContainsIgnoreCase(keyword, pageDetails);
+        if (productPage.isEmpty()) throw new APIException("No products found containing keyword: " + keyword);
+
+        return productMapper.toResponse(productPage);
     }
 
     @Override
