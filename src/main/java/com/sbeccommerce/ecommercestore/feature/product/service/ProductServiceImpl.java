@@ -2,6 +2,7 @@ package com.sbeccommerce.ecommercestore.feature.product.service;
 
 import com.sbeccommerce.ecommercestore.feature.product.DTO.ProductDTO;
 import com.sbeccommerce.ecommercestore.feature.product.DTO.ProductResponse;
+import com.sbeccommerce.ecommercestore.feature.user.model.User;
 import com.sbeccommerce.ecommercestore.global.common.exception.APIException;
 import com.sbeccommerce.ecommercestore.global.common.exception.ResourceNotFoundException;
 import com.sbeccommerce.ecommercestore.feature.category.model.Category;
@@ -36,6 +37,8 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+
+//        User seller = userRepository.findById(productDTO.getUserId()); // Or else throw
 
         Product product = productMapper.toModel(productDTO);
         product.setCategory(category);

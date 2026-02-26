@@ -8,6 +8,8 @@ public class ProductDTO {
 
     private Long categoryId;
 
+    private Long userId;
+
     @NotBlank(message = "Product name needs to be over 3 characters long")
     @Size(min = 3, message = "Product name needs to be over 3 characters long")
     private String productName;
@@ -35,9 +37,10 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long productId, Long categoryId, String productName, String description, /*String image,*/ Integer quantity, Double price,/* Double discount,*/ Double specialPrice) {
+    public ProductDTO(Long productId, Long categoryId, Long userId, String productName, String description, /*String image,*/ Integer quantity, Double price,/* Double discount,*/ Double specialPrice) {
         this.productId = productId;
         this.categoryId = categoryId;
+        this.userId = userId;
         this.productName = productName;
         this.description = description;
 //        this.image = image;
@@ -57,6 +60,14 @@ public class ProductDTO {
 
     public Long getCategoryId() {
         return categoryId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setCategoryId(Long categoryId) {

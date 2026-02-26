@@ -15,8 +15,8 @@ public class Category {
 
     private String categoryName;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Product> products;
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    private List<Product> products;
 
     public Category() {
     }
@@ -41,6 +41,14 @@ public class Category {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+//    public List<Product> getProducts() {
+//        return products;
+//    }
+//
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
 
     @Override
     public boolean equals(Object o) {

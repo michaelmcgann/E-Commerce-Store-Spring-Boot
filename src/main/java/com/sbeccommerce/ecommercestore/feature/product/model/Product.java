@@ -1,9 +1,11 @@
 package com.sbeccommerce.ecommercestore.feature.product.model;
 
 import com.sbeccommerce.ecommercestore.feature.category.model.Category;
+import com.sbeccommerce.ecommercestore.feature.user.model.User;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -14,17 +16,20 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User user;
+
     private String productName;
     private String description;
     private Integer quantity;
     private Double price;
     private Double specialPrice;
 
-
     public Product() {
     }
 
-    public Product(Long productId, String productName, String description, Integer quantity, Double price, Double specialPrice, Category category) {
+    public Product(Long productId, String productName, String description, Integer quantity, Double price, Double specialPrice, Category category, User user) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
@@ -32,6 +37,7 @@ public class Product {
         this.price = price;
         this.specialPrice = specialPrice;
         this.category = category;
+        this.user = user;
     }
 
     public Long getProductId() {
@@ -88,5 +94,13 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
