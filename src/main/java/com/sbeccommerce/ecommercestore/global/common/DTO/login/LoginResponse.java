@@ -1,4 +1,4 @@
-package com.sbeccommerce.ecommercestore.security.jwt;
+package com.sbeccommerce.ecommercestore.global.common.DTO.login;
 
 import java.util.List;
 
