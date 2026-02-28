@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.modelmapper.internal.bytebuddy.build.ToStringPlugin;
 
 import java.util.HashSet;
 import java.util.List;
@@ -47,12 +46,10 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password, Set<Role> roles, Set<Product> products) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.roles = roles;
-        this.products = products;
     }
 
     public Long getUserId() {

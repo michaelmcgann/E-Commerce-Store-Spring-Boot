@@ -11,6 +11,7 @@ import java.io.Serial;
 import java.util.Collection;
 import java.util.Objects;
 
+
 public class UserDetailsImpl implements UserDetails {
 
     @Serial

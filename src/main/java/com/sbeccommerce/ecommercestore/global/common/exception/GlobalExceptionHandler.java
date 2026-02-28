@@ -1,8 +1,9 @@
 package com.sbeccommerce.ecommercestore.global.common.exception;
 
-import com.sbeccommerce.ecommercestore.global.common.DTO.APIResponse;
+import com.sbeccommerce.ecommercestore.security.DTO.response.APIResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +41,12 @@ public class GlobalExceptionHandler {
         String message = exception.getMessage();
         APIResponse response = new APIResponse(message, false);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<APIResponse> handleAuthenticationException(AuthenticationException exception) {
+        APIResponse response = new APIResponse("bad credentials", false);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
 }

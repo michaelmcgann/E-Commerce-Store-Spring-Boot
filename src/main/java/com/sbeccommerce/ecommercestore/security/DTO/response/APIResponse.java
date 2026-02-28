@@ -1,4 +1,4 @@
-package com.sbeccommerce.ecommercestore.global.common.DTO;
+package com.sbeccommerce.ecommercestore.security.DTO.response;
 
 public class APIResponse {
 
