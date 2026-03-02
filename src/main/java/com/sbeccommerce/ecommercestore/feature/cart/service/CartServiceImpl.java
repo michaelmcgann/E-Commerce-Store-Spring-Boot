@@ -41,11 +41,6 @@ public class CartServiceImpl implements CartService {
 
         userCart.addProduct(product, itemRequest.getQuantity());
 
-        userCart.setTotalPrice(userCart.getCartItems().stream()
-                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
-                .sum()
-        );
-
         Cart savedCart = cartRepository.save(userCart);
 
         return cartMapper.toDTO(savedCart);
@@ -65,6 +60,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public void removeItem(Long productId) {
         Cart cart = cartRepository.findCartByUser_Email(authUtil.loggedInEmail());
         if (cart == null) return;
@@ -72,14 +68,9 @@ public class CartServiceImpl implements CartService {
         boolean removed = cart.removeProduct(productId);
         if (!removed) return;
 
-        cart.setTotalPrice(cart.getCartItems().stream()
-                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
-                .sum());
-
         cartRepository.save(cart);
 
     }
-
 
     private Cart getCart() {
         Cart userCart = cartRepository.findCartByUser_Email(authUtil.loggedInEmail());

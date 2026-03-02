@@ -52,7 +52,6 @@ public class Cart {
         int newQty = item.getQuantity() + qty;
         if (newQty <= 0) removeItem(item);
         else item.setQuantity(newQty);
-        recalculateTotalPrice();
 
     }
 
@@ -60,7 +59,6 @@ public class Cart {
         CartItem item = getCartItemByProductId(productId);
         if (item == null) return false;
         removeItem(item);
-        recalculateTotalPrice();
         return true;
     }
 
@@ -80,11 +78,13 @@ public class Cart {
     private void addItem(CartItem item) {
         cartItems.add(item);
         item.setCart(this);
+        recalculateTotalPrice();
     }
 
     private void removeItem(CartItem item) {
         cartItems.remove(item);
         item.setCart(null);
+        recalculateTotalPrice();
     }
 
     public Long getCartId() {
