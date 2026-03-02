@@ -15,6 +15,7 @@ import com.sbeccommerce.ecommercestore.security.DTO.response.APIResponse;
 import com.sbeccommerce.ecommercestore.security.jwt.JwtUtils;
 import com.sbeccommerce.ecommercestore.security.service.UserDetailsImpl;
 import org.jspecify.annotations.NonNull;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -65,14 +66,15 @@ public class AuthServiceImpl implements AuthService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        assert userDetails != null;
-        String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
+//        assert userDetails != null;
+//        String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
 
+        assert userDetails != null;
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        return new UserInfoResponse(userDetails.getId(), jwtToken, userDetails.getUsername(), roles);
+        return new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), roles);
 
     }
 
@@ -92,6 +94,20 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
 
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            return authentication.getName();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseCookie getSignOutCookie() {
+        return jwtUtils.getCleanJwtCookie();
     }
 
     private @NonNull Set<Role> getRoles(SignupRequest signupRequest) {
