@@ -1,8 +1,8 @@
 package com.sbeccommerce.ecommercestore.feature.product.service;
 
+import com.sbeccommerce.ecommercestore.feature.cart.repository.CartItemRepository;
 import com.sbeccommerce.ecommercestore.feature.product.DTO.ProductDTO;
 import com.sbeccommerce.ecommercestore.feature.product.DTO.ProductResponse;
-import com.sbeccommerce.ecommercestore.feature.user.model.User;
 import com.sbeccommerce.ecommercestore.global.common.exception.APIException;
 import com.sbeccommerce.ecommercestore.global.common.exception.ResourceNotFoundException;
 import com.sbeccommerce.ecommercestore.feature.category.model.Category;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -25,11 +26,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final CartItemRepository cartItemRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.productMapper = productMapper;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @Override
@@ -37,8 +40,6 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-
-//        User seller = userRepository.findById(productDTO.getUserId()); // Or else throw
 
         Product product = productMapper.toModel(productDTO);
         product.setCategory(category);
@@ -105,14 +106,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO deleteProduct(Long productId) {
+    @Transactional
+    public void deleteProduct(Long productId) {
 
-        Product foundProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-
-        productRepository.delete(foundProduct);
-
-        return productMapper.toProductDTO(foundProduct);
+        if (!productRepository.existsById(productId)) {
+            throw new ResourceNotFoundException("Product", "productId", productId);
+        }
+        cartItemRepository.deleteAllByProductId(productId);
+        productRepository.deleteById(productId);
     }
 
 

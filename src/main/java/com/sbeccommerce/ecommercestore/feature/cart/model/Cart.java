@@ -17,22 +17,19 @@ public class Cart {
     private Long cartId;
 
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},orphanRemoval = true)
     private Set<CartItem> cartItems = new HashSet<>();
 
-    private Double totalPrice = 0.0;
-
     public Cart() {
     }
 
-    public Cart(Long cartId, User user, Set<CartItem> cartItems, Double totalPrice) {
+    public Cart(Long cartId, User user, Set<CartItem> cartItems) {
         this.cartId = cartId;
         this.user = user;
         this.cartItems = cartItems;
-        this.totalPrice = totalPrice;
     }
 
     public void addProduct(Product product, int qty) {
@@ -51,8 +48,12 @@ public class Cart {
         }
         int newQty = item.getQuantity() + qty;
         if (newQty <= 0) removeItem(item);
-        else item.setQuantity(newQty);
+        else updateItemQuantity(item, newQty);
 
+    }
+
+    private void updateItemQuantity(CartItem item, int newQty) {
+        item.setQuantity(newQty);
     }
 
     public boolean removeProduct(Long productId) {
@@ -69,22 +70,20 @@ public class Cart {
                 .orElse(null);
     }
 
-    private void recalculateTotalPrice() {
-        this.totalPrice = cartItems.stream()
-                .mapToDouble(ci -> ci.getProduct().getPrice() * ci.getQuantity())
-                .sum();
-    }
-
     private void addItem(CartItem item) {
         cartItems.add(item);
         item.setCart(this);
-        recalculateTotalPrice();
     }
 
     private void removeItem(CartItem item) {
         cartItems.remove(item);
         item.setCart(null);
-        recalculateTotalPrice();
+    }
+    @Transient
+    public Double getTotalPrice() {
+        return cartItems.stream()
+                .mapToDouble(ci -> ci.getProduct().getPrice() * ci.getQuantity())
+                .sum();
     }
 
     public Long getCartId() {
@@ -111,11 +110,4 @@ public class Cart {
         this.cartItems = cartItems;
     }
 
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 }

@@ -70,9 +70,9 @@ public class ProductController {
     }
 
     @DeleteMapping("/admin/products/{productId}")
-    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long productId) {
-        ProductDTO deletedProduct = productService.deleteProduct(productId);
-        return ResponseEntity.ok(deletedProduct);
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
     }
 
 }
