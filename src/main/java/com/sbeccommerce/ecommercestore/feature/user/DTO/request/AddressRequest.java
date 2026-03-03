@@ -1,21 +1,11 @@
-package com.sbeccommerce.ecommercestore.feature.user.model;
+package com.sbeccommerce.ecommercestore.feature.user.DTO.request;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity
-@Table(name = "addresses")
-public class Address {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long addressId;
+public class AddressRequest {
 
     @NotNull
     @PositiveOrZero
@@ -41,28 +31,16 @@ public class Address {
     @Size(min = 3, message = "Country name must be 3 or more characters")
     private String country;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    public AddressRequest() {
+    }
 
-    public Address(Integer buildingNumber, String street, String city, String region, String postcode, String country) {
+    public AddressRequest(Integer buildingNumber, String street, String city, String region, String postcode, String country) {
         this.buildingNumber = buildingNumber;
         this.street = street;
         this.city = city;
         this.region = region;
         this.postcode = postcode;
         this.country = country;
-    }
-
-    public Address() {
-    }
-
-    public Long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Long addressID) {
-        this.addressId = addressID;
     }
 
     public Integer getBuildingNumber() {
@@ -111,13 +89,5 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

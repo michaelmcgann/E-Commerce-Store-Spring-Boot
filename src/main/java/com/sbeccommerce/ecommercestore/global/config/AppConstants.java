@@ -11,4 +11,7 @@ public class AppConstants {
     public static final String SORT_PRODUCTS_BY = "productName";
     public static final String SORT_PRODUCTS_ORDER = "asc";
 
+    public static final String SORT_ADDRESSES_BY = "city";
+    public static final String SORT_ADDRESSES_ORDER = "asc";
+
 }
